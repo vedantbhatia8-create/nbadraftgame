@@ -91,7 +91,6 @@ export default function AdminDashboard({ user, onClose }) {
           ) : (
             users.map((u, i) => {
               const isYou = u.email === ADMIN_EMAIL;
-              const gameCount = u.games?.[0]?.count ?? 0;
               return (
                 <div key={u.id} style={{
                   display: 'flex', alignItems: 'center', gap: 16,
@@ -117,7 +116,7 @@ export default function AdminDashboard({ user, onClose }) {
                       )}
                     </div>
                     <div style={{ fontFamily: 'var(--cond)', fontSize: 11, color: 'var(--muted-2)', marginTop: 3, letterSpacing: 1 }}>
-                      Joined {new Date(u.created_at).toLocaleDateString()} · {gameCount} game{gameCount !== 1 ? 's' : ''}
+                      Joined {new Date(u.created_at).toLocaleDateString()}
                     </div>
                   </div>
 

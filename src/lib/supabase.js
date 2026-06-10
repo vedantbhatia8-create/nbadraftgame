@@ -45,10 +45,11 @@ export async function getProfile(userId) {
 
 export async function getAllUsers() {
   if (!supabase) return [];
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('profiles')
-    .select('*, games(count)')
+    .select('*')
     .order('created_at', { ascending: false });
+  if (error) console.error('getAllUsers error:', error);
   return data ?? [];
 }
 
