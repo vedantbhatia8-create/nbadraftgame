@@ -5,7 +5,8 @@ import { BasketballIcon } from './components';
 const ADMIN_EMAIL = 'vedantbhatia8@gmail.com';
 
 export function isAdmin(user) {
-  return user?.email === ADMIN_EMAIL;
+  const email = user?.email || user?.user_metadata?.email;
+  return email === ADMIN_EMAIL;
 }
 
 export default function AdminDashboard({ user, onClose }) {
