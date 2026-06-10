@@ -45,12 +45,25 @@ export async function getProfile(userId) {
 
 export async function getAllUsers() {
   if (!supabase) return [];
-  const { data, error } = await supabase
+  const { data: profiles, error } = await supabase
     .from('profiles')
     .select('*')
     .order('created_at', { ascending: false });
   if (error) console.error('getAllUsers error:', error);
-  return data ?? [];
+  if (!profiles?.length) return [];
+
+  const { data: lastGames } = await supabase
+    .from('games')
+    .select('user_id, created_at')
+    .in('user_id', profiles.map(p => p.id))
+    .order('created_at', { ascending: false });
+
+  const lastPlayedMap = {};
+  for (const g of lastGames ?? []) {
+    if (!lastPlayedMap[g.user_id]) lastPlayedMap[g.user_id] = g.created_at;
+  }
+
+  return profiles.map(p => ({ ...p, last_played: lastPlayedMap[p.id] ?? null }));
 }
 
 export async function setBanned(userId, banned) {

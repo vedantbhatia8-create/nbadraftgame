@@ -117,6 +117,9 @@ export default function AdminDashboard({ user, onClose }) {
                     </div>
                     <div style={{ fontFamily: 'var(--cond)', fontSize: 11, color: 'var(--muted-2)', marginTop: 3, letterSpacing: 1 }}>
                       Joined {new Date(u.created_at).toLocaleDateString()}
+                      {u.last_played
+                        ? ` · Last played ${new Date(u.last_played).toLocaleDateString()}`
+                        : ' · Never played'}
                     </div>
                   </div>
 
