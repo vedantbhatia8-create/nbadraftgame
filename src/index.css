@@ -347,9 +347,122 @@ body {
   animation: fade .2s ease;
 }
 
+/* ── Tablet ── */
 @media (max-width: 980px) {
-  .body-grid { grid-template-columns: 1fr; grid-auto-rows: min-content; overflow-y: auto; }
   html, body { overflow: auto; }
+  #root { height: auto; min-height: 100%; }
+  .stage { height: auto; min-height: 100vh; }
+  .body-grid { grid-template-columns: 1fr; }
+}
+
+/* Mobile clock label — hidden on desktop, shown on mobile */
+.mobile-clock {
+  display: none;
+  font-family: var(--cond); font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1.5px; font-size: 11px;
+}
+
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  .mobile-clock { display: block; }
+  html, body { overflow: auto; }
+
+  /* Topbar: compact */
+  .topbar {
+    padding: 10px 14px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .brand-mark { width: 32px; height: 32px; }
+  .brand-mark svg { width: 20px; height: 20px; }
+  .brand-name { font-size: 20px; }
+  .brand-sub { display: none; }
+  .round-chip { display: none; }
+  .live-pill { margin-left: 0; font-size: 10px; padding: 4px 8px; }
+
+  /* Body: center on top, teams side-by-side below */
+  .body-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    grid-template-areas: "center center" "gm1 gm2";
+  }
+  .col.center {
+    grid-area: center;
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+  }
+  .col:not(.center):not(.p2) { grid-area: gm1; }
+  .col.p2 { grid-area: gm2; border-left: 1px solid var(--line); }
+
+  /* Team columns: compact */
+  .team-header { padding: 10px 10px 8px; gap: 8px; }
+  .gm-badge { width: 30px; height: 30px; font-size: 14px; }
+  .gm-name { font-size: 14px; }
+  .gm-label { font-size: 9px; }
+  .wins-num { font-size: 24px; }
+  .wins-cap { font-size: 8px; }
+  .lineup { padding: 6px 8px 8px; }
+  .slot { padding: 6px 8px; gap: 7px; margin-top: 5px; }
+  .slot-pos { width: 28px; height: 28px; font-size: 11px; border-radius: 6px; }
+  .slot-name { font-size: 12px; }
+  .slot-sub { font-size: 9px; }
+  .slot-grade { font-size: 15px; }
+
+  /* Center column */
+  .center-inner { padding: 12px 14px; gap: 12px; }
+  .reel-card { padding: 14px; }
+  .reel-title { font-size: 10px; margin-bottom: 10px; }
+  .reels { gap: 8px; }
+  .reel { height: 96px; }
+  .reel-item .ri-abbr { font-size: 20px; }
+  .reel-item.decade { font-size: 24px; }
+  .matchup-banner .mb-main { font-size: 20px; }
+  .btn { font-size: 13px; padding: 11px 14px; }
+  .btn-spin { font-size: 15px; }
+  .spin-row { gap: 8px; margin-top: 10px; }
+
+  /* Player rows: hide two least-used stats */
+  .pr-stats { gap: 8px; }
+  .pr-stat:nth-child(4),
+  .pr-stat:nth-child(5) { display: none; }
+  .pr-name { font-size: 14px; }
+  .pr-stat .v { font-size: 13px; }
+
+  /* Search controls: stack on mobile */
+  .search-controls { flex-direction: column; align-items: stretch; gap: 6px; padding: 10px 12px; }
+  .pos-filter { justify-content: space-between; }
+  .pf-btn { flex: 1; text-align: center; }
+
+  /* Host */
+  .host { padding: 10px 12px; gap: 10px; }
+  .host-avatar { width: 36px; height: 36px; }
+  .host-avatar svg { width: 20px; height: 20px; }
+  .host-text { font-size: 13px; }
+
+  /* Mode select */
+  .mode-select-overlay { padding: 16px; align-items: flex-start; padding-top: 24px; overflow-y: auto; }
+  .mode-grid { grid-template-columns: 1fr; gap: 12px; margin-top: 20px; }
+  .mode-card { padding: 20px 16px; flex-direction: row; text-align: left; gap: 14px; }
+  .mode-card .mc-icon { font-size: 28px; margin-bottom: 0; flex: 0 0 auto; }
+  .mode-card .mc-title { font-size: 20px; margin-bottom: 4px; }
+  .mode-card .mc-cta { margin-top: 10px; }
+
+  /* Mini-game */
+  .mg-wrap { padding: 16px; }
+  .mg-type { font-size: 26px; }
+  .mg-arena { gap: 8px; }
+  .mg-btn { padding: 20px 0; font-size: 16px; }
+  .mg-countdown-big { font-size: 70px; }
+  .mg-call-btn { padding: 14px 24px; font-size: 16px; }
+
+  /* Gameover modal */
+  .final-wins { font-size: 42px; }
+  .vs-final { gap: 10px; }
+
+  /* Toast */
+  .toast { font-size: 12px; top: 10px; }
 }
 
 /* ---------- Mode select ---------- */

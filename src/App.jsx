@@ -464,6 +464,11 @@ function Topbar({ turn, activeName, activeAccent, phase, gameMode, onNew, user, 
           ON THE CLOCK · <b style={{ color: activeAccent }}>{activeName}</b>
         </div>
       )}
+      {phase !== 'gameover' && (
+        <div className="mobile-clock" style={{ color: activeAccent }}>
+          <b>{activeName}</b> on the clock
+        </div>
+      )}
       <button className="btn btn-ghost" style={{ marginLeft: 'auto', padding: '8px 14px' }} onClick={onNew}>
         ← Modes
       </button>
