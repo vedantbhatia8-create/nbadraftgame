@@ -10,6 +10,17 @@ export default function AuthScreen({ onGuest }) {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
+  async function handleGoogle() {
+    if (!supabase) { setError('Supabase not configured.'); return; }
+    setLoading(true);
+    setError(null);
+    const { error: err } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin },
+    });
+    if (err) { setError(err.message); setLoading(false); }
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     if (!supabase) { setError('Supabase not configured.'); return; }
@@ -49,8 +60,7 @@ export default function AuthScreen({ onGuest }) {
             {mode === 'signin' ? 'Sign In' : 'Create Account'}
           </div>
 
-          {/* Google OAuth — coming soon */}
-          <button disabled style={{
+          <button onClick={handleGoogle} disabled={loading} style={{
             width: '100%',
             display: 'flex',
             alignItems: 'center',
@@ -60,12 +70,11 @@ export default function AuthScreen({ onGuest }) {
             background: 'transparent',
             border: '1px solid var(--line)',
             borderRadius: 10,
-            color: 'var(--muted-2)',
+            color: 'var(--text)',
             fontFamily: 'var(--body)',
             fontSize: 14,
-            cursor: 'not-allowed',
+            cursor: loading ? 'not-allowed' : 'pointer',
             marginBottom: 16,
-            position: 'relative',
           }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
@@ -74,19 +83,6 @@ export default function AuthScreen({ onGuest }) {
               <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
             </svg>
             Continue with Google
-            <span style={{
-              position: 'absolute',
-              right: 12,
-              fontFamily: 'var(--cond)',
-              fontWeight: 700,
-              fontSize: 9,
-              letterSpacing: 1.5,
-              textTransform: 'uppercase',
-              color: 'var(--gold)',
-              border: '1px solid var(--gold)',
-              borderRadius: 4,
-              padding: '2px 5px',
-            }}>Soon</span>
           </button>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
