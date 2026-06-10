@@ -5,7 +5,7 @@ function positionFit(naturalPos, slot) {
   return [1.0, 0.94, 0.85, 0.74, 0.66][dist];
 }
 
-function effectiveRating(player, slot) {
+export function effectiveRating(player, slot) {
   return player.r * positionFit(player.p, slot);
 }
 
