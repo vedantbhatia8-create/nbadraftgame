@@ -32,3 +32,31 @@ export async function getRecentGames(userId, limit = 5) {
     .limit(limit);
   return data ?? [];
 }
+
+export async function getProfile(userId) {
+  if (!supabase || !userId) return null;
+  const { data } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', userId)
+    .single();
+  return data;
+}
+
+export async function getAllUsers() {
+  if (!supabase) return [];
+  const { data } = await supabase
+    .from('profiles')
+    .select('*, games(count)')
+    .order('created_at', { ascending: false });
+  return data ?? [];
+}
+
+export async function setBanned(userId, banned) {
+  if (!supabase) return;
+  const { error } = await supabase
+    .from('profiles')
+    .update({ is_banned: banned })
+    .eq('id', userId);
+  return error;
+}

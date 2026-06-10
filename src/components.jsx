@@ -162,7 +162,7 @@ export function Host({ text, grade, gradeColor }) {
 /* ============================================================
    MODE SELECT
    ============================================================ */
-export function ModeSelect({ onSelect, user, onSignOut }) {
+export function ModeSelect({ onSelect, user, onSignOut, onAdmin }) {
   const modes = [
     {
       key: '1p',
@@ -194,6 +194,12 @@ export function ModeSelect({ onSelect, user, onSignOut }) {
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 20 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <span style={{ fontFamily: 'var(--cond)', fontSize: 11, color: 'var(--muted-2)' }}>{user?.email}</span>
+            {onAdmin && (
+              <button onClick={onAdmin}
+                style={{ background: 'none', border: '1px solid var(--gold)', borderRadius: 8, padding: '5px 10px', color: 'var(--gold)', fontFamily: 'var(--cond)', fontWeight: 700, fontSize: 11, cursor: 'pointer', textTransform: 'uppercase', letterSpacing: 1 }}>
+                Admin
+              </button>
+            )}
             <button
               onClick={onSignOut}
               style={{ background: 'none', border: '1px solid var(--line)', borderRadius: 8, padding: '5px 10px', color: 'var(--muted-2)', fontFamily: 'var(--cond)', fontSize: 11, cursor: 'pointer', textTransform: 'uppercase', letterSpacing: 1 }}>

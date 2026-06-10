@@ -7,7 +7,8 @@ import {
   ModeSelect, MiniGame,
 } from './components';
 import AuthScreen from './AuthScreen';
-import { supabase, saveGame } from './lib/supabase';
+import AdminDashboard, { isAdmin } from './AdminDashboard';
+import { supabase, saveGame, getProfile } from './lib/supabase';
 
 const ACCENTS = ["#FF6A1A", "#2D8CFF"];
 const GM_NAMES = ["GM ONE", "GM TWO"];
@@ -40,14 +41,28 @@ export default function App() {
   const saved = loadState();
 
   // Auth
-  const [user, setUser] = useState(undefined); // undefined = loading, null = guest/signed out
+  const [user, setUser] = useState(undefined); // undefined = loading, null = signed out
+  const [banned, setBanned] = useState(false);
+  const [showAdmin, setShowAdmin] = useState(false);
+
   useEffect(() => {
     if (!supabase) { setUser(null); return; }
-    supabase.auth.getSession().then(({ data }) => {
-      setUser(data.session?.user ?? null);
+    supabase.auth.getSession().then(async ({ data }) => {
+      const u = data.session?.user ?? null;
+      setUser(u);
+      if (u) {
+        const profile = await getProfile(u.id);
+        if (profile?.is_banned) { setBanned(true); supabase.auth.signOut(); }
+      }
     });
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      const u = session?.user ?? null;
+      setUser(u);
+      setBanned(false);
+      if (u) {
+        const profile = await getProfile(u.id);
+        if (profile?.is_banned) { setBanned(true); supabase.auth.signOut(); }
+      }
     });
     return () => subscription.unsubscribe();
   }, []);
@@ -337,11 +352,22 @@ export default function App() {
   }
 
   if (!user) {
-    return <AuthScreen />;
+    return <AuthScreen bannedError={banned} />;
+  }
+
+  if (showAdmin && isAdmin(user)) {
+    return <AdminDashboard user={user} onClose={() => setShowAdmin(false)} />;
   }
 
   if (!gameMode) {
-    return <ModeSelect onSelect={startGame} user={user} onSignOut={() => supabase?.auth.signOut()} />;
+    return (
+      <ModeSelect
+        onSelect={startGame}
+        user={user}
+        onSignOut={() => supabase?.auth.signOut()}
+        onAdmin={isAdmin(user) ? () => setShowAdmin(true) : null}
+      />
+    );
   }
 
   const prizeName = current
@@ -355,6 +381,7 @@ export default function App() {
         activeAccent={ACCENTS[activePicker]} phase={phase}
         gameMode={gameMode} onNew={newGame}
         user={user} onSignOut={() => supabase?.auth.signOut()}
+        onAdmin={isAdmin(user) ? () => setShowAdmin(true) : null}
       />
 
       <div className="body-grid">
@@ -414,7 +441,7 @@ export default function App() {
 }
 
 /* ---------- Topbar ---------- */
-function Topbar({ turn, activeName, activeAccent, phase, gameMode, onNew, user, onSignOut }) {
+function Topbar({ turn, activeName, activeAccent, phase, gameMode, onNew, user, onSignOut, onAdmin }) {
   const isContest = gameMode === 'contest';
   const pickLabel = isContest ? 'ROUND' : 'PICK';
   const pickNum = isContest ? Math.floor(turn / 2) + 1 : Math.min(turn + 1, TOTAL_PICKS);
@@ -444,6 +471,11 @@ function Topbar({ turn, activeName, activeAccent, phase, gameMode, onNew, user, 
         <div style={{ fontFamily: 'var(--cond)', fontSize: 11, color: 'var(--muted-2)', maxWidth: 140, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
           {user.email}
         </div>
+        {onAdmin && (
+          <button className="btn btn-ghost" style={{ padding: '6px 10px', fontSize: 11, color: 'var(--gold)', borderColor: 'var(--gold)' }} onClick={onAdmin}>
+            Admin
+          </button>
+        )}
         <button className="btn btn-ghost" style={{ padding: '6px 10px', fontSize: 11 }} onClick={onSignOut}>
           Sign Out
         </button>

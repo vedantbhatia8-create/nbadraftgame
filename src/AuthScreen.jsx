@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { supabase } from './lib/supabase';
 import { BasketballIcon } from './components';
 
-export default function AuthScreen() {
+export default function AuthScreen({ bannedError }) {
   const [mode, setMode] = useState('signin'); // 'signin' | 'signup'
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -59,6 +59,12 @@ export default function AuthScreen() {
           <div style={{ fontFamily: 'var(--cond)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 3, fontSize: 11, color: 'var(--muted-2)', marginBottom: 18, textAlign: 'center' }}>
             {mode === 'signin' ? 'Sign In' : 'Create Account'}
           </div>
+
+          {bannedError && (
+            <div style={{ marginBottom: 16, fontFamily: 'var(--body)', fontSize: 13, color: '#FF5A5A', background: 'rgba(255,90,90,0.1)', border: '1px solid rgba(255,90,90,0.3)', borderRadius: 8, padding: '10px 14px', textAlign: 'center' }}>
+              Your account has been banned. Contact support if you think this is a mistake.
+            </div>
+          )}
 
           <button onClick={handleGoogle} disabled={loading} style={{
             width: '100%',
