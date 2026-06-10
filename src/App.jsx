@@ -41,8 +41,6 @@ export default function App() {
 
   // Auth
   const [user, setUser] = useState(undefined); // undefined = loading, null = guest/signed out
-  const [showAuth, setShowAuth] = useState(false);
-
   useEffect(() => {
     if (!supabase) { setUser(null); return; }
     supabase.auth.getSession().then(({ data }) => {
@@ -338,16 +336,12 @@ export default function App() {
     );
   }
 
-  if (showAuth) {
-    return (
-      <AuthScreen
-        onGuest={() => setShowAuth(false)}
-      />
-    );
+  if (!user) {
+    return <AuthScreen />;
   }
 
   if (!gameMode) {
-    return <ModeSelect onSelect={startGame} user={user} onSignIn={() => setShowAuth(true)} onSignOut={() => supabase?.auth.signOut()} />;
+    return <ModeSelect onSelect={startGame} user={user} onSignOut={() => supabase?.auth.signOut()} />;
   }
 
   const prizeName = current
@@ -360,8 +354,7 @@ export default function App() {
         turn={turn} activeName={players[activePicker].name}
         activeAccent={ACCENTS[activePicker]} phase={phase}
         gameMode={gameMode} onNew={newGame}
-        user={user} onSignIn={() => setShowAuth(true)}
-        onSignOut={() => supabase?.auth.signOut()}
+        user={user} onSignOut={() => supabase?.auth.signOut()}
       />
 
       <div className="body-grid">
@@ -421,7 +414,7 @@ export default function App() {
 }
 
 /* ---------- Topbar ---------- */
-function Topbar({ turn, activeName, activeAccent, phase, gameMode, onNew, user, onSignIn, onSignOut }) {
+function Topbar({ turn, activeName, activeAccent, phase, gameMode, onNew, user, onSignOut }) {
   const isContest = gameMode === 'contest';
   const pickLabel = isContest ? 'ROUND' : 'PICK';
   const pickNum = isContest ? Math.floor(turn / 2) + 1 : Math.min(turn + 1, TOTAL_PICKS);
@@ -447,20 +440,14 @@ function Topbar({ turn, activeName, activeAccent, phase, gameMode, onNew, user, 
       <button className="btn btn-ghost" style={{ marginLeft: 'auto', padding: '8px 14px' }} onClick={onNew}>
         ← Modes
       </button>
-      {user ? (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <div style={{ fontFamily: 'var(--cond)', fontSize: 11, color: 'var(--muted-2)', maxWidth: 140, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-            {user.email}
-          </div>
-          <button className="btn btn-ghost" style={{ padding: '6px 10px', fontSize: 11 }} onClick={onSignOut}>
-            Sign Out
-          </button>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div style={{ fontFamily: 'var(--cond)', fontSize: 11, color: 'var(--muted-2)', maxWidth: 140, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          {user.email}
         </div>
-      ) : (
-        <button className="btn btn-ghost" style={{ padding: '6px 12px', fontSize: 11, borderColor: 'var(--orange)', color: 'var(--orange)' }} onClick={onSignIn}>
-          Sign In
+        <button className="btn btn-ghost" style={{ padding: '6px 10px', fontSize: 11 }} onClick={onSignOut}>
+          Sign Out
         </button>
-      )}
+      </div>
       <div className="live-pill"><span className="live-dot"></span>Live</div>
     </div>
   );

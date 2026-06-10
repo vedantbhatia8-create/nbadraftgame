@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { supabase } from './lib/supabase';
 import { BasketballIcon } from './components';
 
-export default function AuthScreen({ onGuest }) {
+export default function AuthScreen() {
   const [mode, setMode] = useState('signin'); // 'signin' | 'signup'
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -168,24 +168,6 @@ export default function AuthScreen({ onGuest }) {
           </div>
         </div>
 
-        <button
-          onClick={onGuest}
-          style={{
-            marginTop: 16,
-            background: 'none',
-            border: 'none',
-            color: 'var(--muted-2)',
-            fontFamily: 'var(--cond)',
-            fontWeight: 600,
-            fontSize: 12,
-            textTransform: 'uppercase',
-            letterSpacing: 2,
-            cursor: 'pointer',
-            padding: '8px 0',
-          }}
-        >
-          Continue as Guest →
-        </button>
       </div>
     </div>
   );

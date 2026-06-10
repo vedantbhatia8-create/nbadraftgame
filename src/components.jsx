@@ -162,7 +162,7 @@ export function Host({ text, grade, gradeColor }) {
 /* ============================================================
    MODE SELECT
    ============================================================ */
-export function ModeSelect({ onSelect, user, onSignIn, onSignOut }) {
+export function ModeSelect({ onSelect, user, onSignOut }) {
   const modes = [
     {
       key: '1p',
@@ -192,22 +192,14 @@ export function ModeSelect({ onSelect, user, onSignIn, onSignOut }) {
       <div style={{ width: 'min(860px, 96%)', textAlign: 'center' }}>
         {/* Auth row */}
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 20 }}>
-          {user ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <span style={{ fontFamily: 'var(--cond)', fontSize: 11, color: 'var(--muted-2)' }}>{user.email}</span>
-              <button
-                onClick={onSignOut}
-                style={{ background: 'none', border: '1px solid var(--line)', borderRadius: 8, padding: '5px 10px', color: 'var(--muted-2)', fontFamily: 'var(--cond)', fontSize: 11, cursor: 'pointer', textTransform: 'uppercase', letterSpacing: 1 }}>
-                Sign Out
-              </button>
-            </div>
-          ) : (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span style={{ fontFamily: 'var(--cond)', fontSize: 11, color: 'var(--muted-2)' }}>{user?.email}</span>
             <button
-              onClick={onSignIn}
-              style={{ background: 'none', border: '1px solid var(--orange)', borderRadius: 8, padding: '6px 14px', color: 'var(--orange)', fontFamily: 'var(--cond)', fontWeight: 700, fontSize: 11, cursor: 'pointer', textTransform: 'uppercase', letterSpacing: 1.5 }}>
-              Sign In / Register
+              onClick={onSignOut}
+              style={{ background: 'none', border: '1px solid var(--line)', borderRadius: 8, padding: '5px 10px', color: 'var(--muted-2)', fontFamily: 'var(--cond)', fontSize: 11, cursor: 'pointer', textTransform: 'uppercase', letterSpacing: 1 }}>
+              Sign Out
             </button>
-          )}
+          </div>
         </div>
 
         <div style={{ fontFamily: 'var(--cond)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 4, fontSize: 12, color: 'var(--muted-2)', marginBottom: 8 }}>
@@ -233,11 +225,6 @@ export function ModeSelect({ onSelect, user, onSignIn, onSignOut }) {
             </div>
           ))}
         </div>
-        {!user && (
-          <div style={{ marginTop: 14, fontFamily: 'var(--cond)', fontSize: 11, color: 'var(--muted-2)', letterSpacing: 1 }}>
-            Sign in to save your game history
-          </div>
-        )}
       </div>
     </div>
   );
